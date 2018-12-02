@@ -15,6 +15,7 @@ public class RocketMovement : MonoBehaviour {
 	private Animator animator;
 	[SerializeField] private GameObject fireStrong;
 	[SerializeField] private GameObject fireWeak;
+	[SerializeField] private TextureRepeater background;
 
 	[Header("Attributes")]
 	[SerializeField] private float flightVelocity;
@@ -52,40 +53,44 @@ public class RocketMovement : MonoBehaviour {
 			Action();
 		}
 
-		if(isRightPressed){ 
-			rigidBody.velocity = new Vector2(turnVelocity, rigidBody.velocity.y);
-			animator.SetBool("TurnLeft", false);
-			animator.SetBool("TurnRight", true);
-		}
-		else if(isLeftPressed) {
-			rigidBody.velocity = new Vector2(-turnVelocity, rigidBody.velocity.y);
-			animator.SetBool("TurnRight", false);
-			animator.SetBool("TurnLeft", true);
-		}
-		else if(!isRightPressed && !isLeftPressed && isFlying) {
-			rigidBody.velocity = new Vector2(Input.GetAxisRaw("Horizontal")*turnVelocity, rigidBody.velocity.y);
-			if(Input.GetAxisRaw("Horizontal") > 0.1){
-				animator.SetBool("TurnLeft", false);			
+		if(!GameManager.instance.victory){
+			if(isRightPressed){ 
+				rigidBody.velocity = new Vector2(turnVelocity, rigidBody.velocity.y);
+				animator.SetBool("TurnLeft", false);
 				animator.SetBool("TurnRight", true);
-
 			}
-			else if(Input.GetAxisRaw("Horizontal") < -0.1){
+			else if(isLeftPressed) {
+				rigidBody.velocity = new Vector2(-turnVelocity, rigidBody.velocity.y);
 				animator.SetBool("TurnRight", false);
 				animator.SetBool("TurnLeft", true);
+			}
+			else if(!isRightPressed && !isLeftPressed && isFlying) {
+				rigidBody.velocity = new Vector2(Input.GetAxisRaw("Horizontal")*turnVelocity, rigidBody.velocity.y);
+				if(Input.GetAxisRaw("Horizontal") > 0.1){
+					animator.SetBool("TurnLeft", false);			
+					animator.SetBool("TurnRight", true);
+
+				}
+				else if(Input.GetAxisRaw("Horizontal") < -0.1){
+					animator.SetBool("TurnRight", false);
+					animator.SetBool("TurnLeft", true);
+				}
+				else{
+					animator.SetBool("TurnLeft", false);
+					animator.SetBool("TurnRight", false);
+				}
 			}
 			else{
 				animator.SetBool("TurnLeft", false);
 				animator.SetBool("TurnRight", false);
 			}
 		}
-		else{
-			animator.SetBool("TurnLeft", false);
-			animator.SetBool("TurnRight", false);
-		}
+
+		
 	}
 
 	void FixedUpdate(){
-		if(isFlying && fuelAmmount > 0){
+		if(isFlying && fuelAmmount > 0 && !GameManager.instance.victory){
 			rigidBody.velocity = new Vector2(rigidBody.velocity.x, flightVelocity);
 			fuelAmmount -= fuelDepletionRate;
 			if(fuelAmmount <= initialFuelAmmount*fuelDepletionRate && !actionButtonToggled){
@@ -99,13 +104,16 @@ public class RocketMovement : MonoBehaviour {
 				isLeftPressed = false;
 				launchEnded = true;
 				actionButtonToggled = false;
-				fireWeak.SetActive(false);
+				DeactivateFires();
 				gameUI.ToggleActionButton();
+				background.ToggleMoving();
 			}
 		}
+		
 	}
 
 	IEnumerator LaunchSequence(){
+
 		SFXManager.instance.PlayLaunchSound();
 		fireStrong.SetActive(true);
 		gameUI.ToggleLaunchButton();
@@ -115,39 +123,47 @@ public class RocketMovement : MonoBehaviour {
 	}
 
 	IEnumerator StrongFireWait(){
+
 		yield return new WaitForSeconds(strongFireDelay);
 		fireStrong.SetActive(false);
 		fireWeak.SetActive(true);
 	}
 
 	public void LaunchButton(){
+
 		StartCoroutine(LaunchSequence());
 	}
 
 	public void LaunchRocket(){
+
 		//rocket buildup
 		isFlying = true;
+		background.ToggleMoving();
 		coinSpawner.StartSpawningCoins();
 	}
 
 	public void GoRight(){
+
 		if(isFlying){
 			isRightPressed = true;
 		}
 	}
 
 	public void GoLeft(){
+
 		if(isFlying){
 			isLeftPressed = true;
 		}
 	}
 
 	public void StopMovement(){
+
 		isRightPressed = false;
 		isLeftPressed = false;
 	}
 
 	public void TransferMovementLeft(){
+
 		if(isRightPressed && isFlying){
 			isLeftPressed = true;
 			isRightPressed = false;
@@ -155,6 +171,7 @@ public class RocketMovement : MonoBehaviour {
 	}
 
 	public void TransferMovementRight(){
+
 		if(isLeftPressed && isFlying){
 			isLeftPressed = false;
 			isRightPressed = true;
@@ -162,19 +179,14 @@ public class RocketMovement : MonoBehaviour {
 	}
 
 	public void IncrementMoney(){
+
 		info.money++;
 		gameUI.UpdateMoney(info.money);
 	}
 
-	void OnTriggerEnter2D(Collider2D other){
-		if(other.tag == "Coin"){
-			IncrementMoney();
-			SFXManager.instance.PlayCoinSound();
-			Destroy(other.gameObject);
-		}
-	}
-
 	public void ResetAttributes(){
+
+		isFlying = false;
 		currentFruit = info.fruitNumber;
 		fuelAmmount = initialFuelAmmount;
 		fuelDepletionRate = info.fuelConsumption;
@@ -183,6 +195,7 @@ public class RocketMovement : MonoBehaviour {
 	}
 
 	public void Action(){
+	
 		/* if(info.rocketSize > 1){
 			//latch rocket
 			//info.rocketSize--;
@@ -199,5 +212,33 @@ public class RocketMovement : MonoBehaviour {
 			gameUI.ToggleActionButton();
 		}
 		
+	}
+
+	public void DeactivateFires(){
+
+		fireWeak.SetActive(false);
+		fireStrong.SetActive(false);
+	}
+
+	void OnTriggerEnter2D(Collider2D other){
+
+		if(other.tag == "Coin"){
+			IncrementMoney();
+			SFXManager.instance.PlayCoinSound();
+			Destroy(other.gameObject);
+		}
+
+		else if(other.tag == "Enemy"){
+			//play crash sound
+			GameManager.instance.EndLaunch(transform.position.y);
+			isFlying = false;
+			isRightPressed = false;
+			isLeftPressed = false;
+			launchEnded = true;
+			actionButtonToggled = false;
+			DeactivateFires();
+			if(!gameUI.actionButton.activeSelf) gameUI.ToggleActionButton();
+			background.ToggleMoving();
+		}
 	}
 }

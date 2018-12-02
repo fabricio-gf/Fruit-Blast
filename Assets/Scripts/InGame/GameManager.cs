@@ -11,15 +11,20 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private GameUI gameUI;
 	[SerializeField] private GameObject rocket;
 	private RocketMovement rocketMovement;
+	[SerializeField] private GameObject rocketRibbon;
 	[SerializeField] private GameObject[] astroObjects;
 	[SerializeField] private Sprite[] fruitSprites;
 	[SerializeField] private Sprite[] fruitSpritesTier2;
 	private int fruitIndex;
 	[SerializeField] private CoinSpawner coinSpawner;
+	[SerializeField] private TextureRepeater background;
 
 	[Header("Attributes")]
 	[SerializeField] private Transform launchPosition;
 	[SerializeField] private float endDelay;
+	[SerializeField] private float victoryHeight;
+	public bool victory = false;
+	[SerializeField] private float victoryDelay;
 
 	// Use this for initialization
 	void Awake () {
@@ -33,10 +38,43 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Start(){
+
 		InitializeLaunch();
 	}
 
+	void Update(){
+
+		if(rocket.transform.position.y >= victoryHeight && !victory){
+			Victory();
+		}
+	}
+
+	private void Victory(){
+
+		//camera stop tracking
+		//stop inputs
+		victory = true;
+		//stop coin spawn
+		coinSpawner.CancelInvoke();
+		//stop enemy spawn
+		//victory delay
+		StartCoroutine(VictoryDelay());
+		//desativa fogo
+		rocketMovement.DeactivateFires();
+		//deactivate scrolling bg
+		background.ToggleMoving();
+	}
+
+	IEnumerator VictoryDelay(){
+
+		yield return new WaitForSeconds(victoryDelay);
+		//show victory UI
+		gameUI.ToggleVictoryWindow();
+	}
+
 	public void InitializeLaunch(){
+
+		//rocket.transform.position = new Vector2(10,10);
 		rocket.transform.position = launchPosition.position;
 		RandomizeFruits();
 		Camera.main.transform.position = new Vector3(0, 0, -10);
@@ -47,11 +85,14 @@ public class GameManager : MonoBehaviour {
 		gameUI.SetFuelBar();
 		gameUI.UpdateMoney(info.money);
 		gameUI.InitializeInvokes();
-		//reset UI
+		if(PlayerPrefs.GetInt("Ribbon") == 1){
+			rocketRibbon.SetActive(true);
+		}
 		
 	}
 
 	public void RandomizeFruits(){
+
 		fruitIndex = info.fruitNumber;
 		for(int i = 0; i < info.fruitNumber; i++){
 			switch(info.fruitQuality){
@@ -68,18 +109,29 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void LoseFruit(){
+
 		fruitIndex--;
 		if(fruitIndex >= 0)
 			astroObjects[fruitIndex].SetActive(false);
 	}
 
 	public void EndLaunch(float altitude){
+
 		StartCoroutine(EndDelay(endDelay, altitude));
 		coinSpawner.CancelInvoke();
 	}
 
 	IEnumerator EndDelay(float endDelay, float altitude){
+
 		yield return new WaitForSeconds(endDelay);
 		gameUI.ToggleEndWindow(altitude);
+	}
+
+	public void RestartGame(){
+
+		ProgressManager.instance.ResetProgress(true);
+		ProgressManager.instance.UnlockRibbon(1);
+		InitializeLaunch();
+		victory = false;
 	}
 }

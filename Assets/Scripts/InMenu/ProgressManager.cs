@@ -27,7 +27,7 @@ public class ProgressManager : MonoBehaviour {
 	void Update(){
 		#if UNITY_EDITOR
 			if(Input.GetKeyDown(KeyCode.R)){
-				ResetProgress();
+				ResetProgress(true);
 			}
 		#endif
 	}
@@ -42,7 +42,10 @@ public class ProgressManager : MonoBehaviour {
 
 	}
 
-	public void ResetProgress(){
+	public void ResetProgress(bool ribbon){
+		if(ribbon){
+			PlayerPrefs.SetInt("Money", 0);
+		}
 		PlayerPrefs.SetInt("Money", 0);
 		PlayerPrefs.SetInt("RocketSize", 0);
 		PlayerPrefs.SetInt("StartingFuel", 0);
@@ -95,6 +98,12 @@ public class ProgressManager : MonoBehaviour {
 		PlayerPrefs.SetInt("FruitQuality", value);
 		PlayerPrefs.Save();
 		PrintPrefs("FruitQuality");
+	}
+
+	public void UnlockRibbon(int value){
+		PlayerPrefs.SetInt("Ribbon", value);
+		PlayerPrefs.Save();
+		PrintPrefs("Ribbon");
 	}
 
 	// debug

@@ -27,7 +27,8 @@ public class Wall : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		if(other.tag != "Rocket") Destroy(other.gameObject);
-		else{
+		else if(!GameManager.instance.victory){
+			print("entrou");
 			SFXManager.instance.PlayDeathSound();
 			other.GetComponent<Rigidbody2D>().gravityScale = 0;
 			other.GetComponent<Rigidbody2D>().velocity = Vector3.zero;

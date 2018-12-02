@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void FixedUpdate () {
-		if(rocketMovement.isFlying){
+		if(rocketMovement.isFlying && !GameManager.instance.victory){
 			transform.position = new Vector3(0, rocket.position.y + cameraOffsetY, -10);
 		}
 	}

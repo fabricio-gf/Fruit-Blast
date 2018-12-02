@@ -111,6 +111,10 @@ public class StoreUI : UI {
 	}
 
 	private void ResetUpgrades(){
-		ProgressManager.instance.ResetProgress();
+		if(PlayerPrefs.GetInt("Ribbon") == 1)
+			ProgressManager.instance.ResetProgress(true);
+		else{
+			ProgressManager.instance.ResetProgress(false);
+		}
 	}
 }
