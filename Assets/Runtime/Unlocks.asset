@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 018073bbabc166d42b428924d1ed06f5, type: 3}
+  m_Name: Unlocks
+  m_EditorClassIdentifier: 
+  rocketSizeIndex: 0
+  rocketSizeUnlocks: 010000000200000003000000
+  rocketSizePrices: 14000000280000003c000000
+  startingFuelIndex: 0
+  startingFuelUnlocks:
+  - 100
+  - 150
+  - 200
+  startingFuelPrices: 14000000280000003c000000
+  fuelConsumptionIndex: 0
+  fuelConsumptionUnlocks:
+  - 0.5
+  - 0.25
+  - 0.1
+  fuelConsumptionPrices: 000000000000000000000000
+  fruitNumberIndex: 0
+  fruitNumberUnlocks: 010000000200000003000000
+  fruitNumberPrices: 14000000280000003c000000
+  fruitQualityIndex: 0
+  fruitQualityUnlocks: 010000000200000003000000
+  fruitQualityPrices: 14000000280000003c000000
