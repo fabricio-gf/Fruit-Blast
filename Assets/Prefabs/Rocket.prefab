@@ -109,9 +109,10 @@ MonoBehaviour:
   coinSpawner: {fileID: 0}
   flightVelocity: 5
   fuelAmmount: 100
+  initialFuelAmmount: 0
   fuelDepletionRate: 0.1
-  fruitFuelGain: 50
-  turnVelocity: 5
+  fruitFuelGain: 30
+  turnVelocity: 3
   isFlying: 0
   launchEnded: 0
 --- !u!212 &212838611573389254

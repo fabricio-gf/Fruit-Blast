@@ -7,13 +7,21 @@ public class GameUI : UI {
 
 	[Header("References")]
 	[SerializeField] private PlayerInfo info;
+	[SerializeField] private Unlocks unlocks;
 	
 	[SerializeField] private GameObject rocket;
 	private RocketMovement rocketMovement;
 	[SerializeField] private GameObject actionButton;
 	[SerializeField] private Text altitudeText;
-	[SerializeField] private Text fuelText;
+
+	[SerializeField] private Image fuelBar;
+	[SerializeField] private Sprite[] fuelBarSprites;
+	[SerializeField] private Image fuelBarFront;
+	[SerializeField] private Sprite[] fuelBarFrontSprites;
+	[SerializeField] private float[] fuelBarFrontValues;
+
 	[SerializeField] private Text moneyText;
+	[SerializeField] private GameObject warningText;
 
 	[SerializeField] private Text endAltitudeText;
 	[SerializeField] private Text endMoneyText;
@@ -26,7 +34,7 @@ public class GameUI : UI {
 		rocketMovement = rocket.GetComponent<RocketMovement>();
 	}
 
-	void Start(){
+	public void InitializeInvokes(){
 		InvokeRepeating("UpdateAltitude", 0, 0.1f);
 		InvokeRepeating("UpdateFuel", 0, 0.1f);
 	}
@@ -46,24 +54,36 @@ public class GameUI : UI {
 		rocketMovement.StopMovement();
 	}
 
+	public void TransferButtonLeft(){
+		rocketMovement.TransferMovementLeft();
+	}
+
+	public void TransferButtonRight(){
+		rocketMovement.TransferMovementRight();
+	}
+
 	public void ToggleActionButton(){
+		warningText.SetActive(!warningText.activeSelf);
 		actionButton.SetActive(!actionButton.activeSelf);
 		//button animation
 	}
 
 	private void UpdateAltitude(){
-		altitudeText.text = "Altitude:\n" + System.Math.Round(rocket.transform.position.y, 2).ToString();
+		if(rocket.transform.position.y <= 0) altitudeText.text = "Altitude: 0m"; 
+		else altitudeText.text = "Altitude: " + System.Math.Round(rocket.transform.position.y, 2).ToString() + "m";
 	}
 
 	private void UpdateFuel(){
-		fuelText.text = "Fuel:\n" + System.Math.Round(rocketMovement.fuelAmmount, 2).ToString();
+		//fuelText.text = "Fuel:\n" + System.Math.Round(rocketMovement.fuelAmmount, 2).ToString();
+		fuelBarFront.transform.localScale = new Vector3(rocketMovement.fuelAmmount/rocketMovement.initialFuelAmmount, 0.85f, 1);
 	}
 
 	public void UpdateMoney(int value){
-		moneyText.text = "Money:\n" + value;
+		moneyText.text = value.ToString();
 	}
 
 	public void ToggleEndWindow(float altitude){
+		CancelInvoke();
 		ToggleButtons();
 		endAltitudeText.text = "You've reached " + System.Math.Round(altitude, 2).ToString() + "m";
 		endMoneyText.text = "You have " + info.money.ToString() + " coins";
@@ -77,4 +97,13 @@ public class GameUI : UI {
 	public void ToggleLaunchButton(){
 		launchButton.SetActive(!launchButton.activeSelf);
 	}
+
+	public void SetFuelBar(){
+		int index = unlocks.startingFuelIndex;
+		fuelBar.sprite = fuelBarSprites[index];
+		fuelBar.GetComponent<RectTransform>().sizeDelta = new Vector2(250*(index+2),100);
+		fuelBarFront.sprite = fuelBarFrontSprites[index];
+		fuelBarFront.GetComponent<RectTransform>().sizeDelta = new Vector2(fuelBarFrontValues[index],100);
+	}
+
 }

@@ -11,24 +11,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 018073bbabc166d42b428924d1ed06f5, type: 3}
   m_Name: Unlocks
   m_EditorClassIdentifier: 
-  rocketSizeIndex: 0
+  rocketSizeIndex: 2
   rocketSizeUnlocks: 010000000200000003000000
   rocketSizePrices: 14000000280000003c000000
-  startingFuelIndex: 0
+  startingFuelIndex: 2
   startingFuelUnlocks:
   - 100
   - 150
   - 200
   startingFuelPrices: 14000000280000003c000000
-  fuelConsumptionIndex: 0
+  fuelConsumptionIndex: 2
   fuelConsumptionUnlocks:
   - 0.5
   - 0.25
   - 0.1
   fuelConsumptionPrices: 000000000000000000000000
-  fruitNumberIndex: 0
+  fruitNumberIndex: 1
   fruitNumberUnlocks: 010000000200000003000000
   fruitNumberPrices: 14000000280000003c000000
   fruitQualityIndex: 0
-  fruitQualityUnlocks: 010000000200000003000000
-  fruitQualityPrices: 14000000280000003c000000
+  fruitQualityUnlocks: 0100000002000000
+  fruitQualityPrices: 1400000028000000

@@ -11,10 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c0cb87b85372464e82eb530c55a1bab, type: 3}
   m_Name: PlayerInfo
   m_EditorClassIdentifier: 
-  money: 0
+  money: 602
   rocketIteration: 1
   rocketSize: 1
   startingFuel: 100
   fuelConsumption: 0.5
-  fruitNumber: 3
+  fruitNumber: 1
   fruitQuality: 1

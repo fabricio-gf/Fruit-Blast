@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour {
 	private RocketMovement rocketMovement;
 	[SerializeField] private GameObject[] astroObjects;
 	[SerializeField] private Sprite[] fruitSprites;
+	[SerializeField] private Sprite[] fruitSpritesTier2;
 	private int fruitIndex;
+	[SerializeField] private CoinSpawner coinSpawner;
 
 	[Header("Attributes")]
 	[SerializeField] private Transform launchPosition;
@@ -42,14 +44,26 @@ public class GameManager : MonoBehaviour {
 		rocketMovement.ResetAttributes();
 		gameUI.ToggleButtons();
 		gameUI.ToggleLaunchButton();
+		gameUI.SetFuelBar();
+		gameUI.UpdateMoney(info.money);
+		gameUI.InitializeInvokes();
 		//reset UI
+		
 	}
 
 	public void RandomizeFruits(){
 		fruitIndex = info.fruitNumber;
 		for(int i = 0; i < info.fruitNumber; i++){
-			astroObjects[i].GetComponent<SpriteRenderer>().sprite = fruitSprites[Random.Range(0,fruitSprites.Length)];
-			astroObjects[i].SetActive(true);
+			switch(info.fruitQuality){
+				case 1:
+					astroObjects[i].GetComponent<SpriteRenderer>().sprite = fruitSprites[Random.Range(0,fruitSprites.Length)];
+					astroObjects[i].SetActive(true);
+				break;
+				case 2:
+					astroObjects[i].GetComponent<SpriteRenderer>().sprite = fruitSpritesTier2[Random.Range(0,fruitSpritesTier2.Length)];
+					astroObjects[i].SetActive(true);
+				break;
+			}
 		}
 	}
 
@@ -61,6 +75,7 @@ public class GameManager : MonoBehaviour {
 
 	public void EndLaunch(float altitude){
 		StartCoroutine(EndDelay(endDelay, altitude));
+		coinSpawner.CancelInvoke();
 	}
 
 	IEnumerator EndDelay(float endDelay, float altitude){
