@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StoreUI : UI {
 
 	[Header("References")]
 	[SerializeField] private PlayerInfo info;
 	[SerializeField] private Unlocks unlocks;
+
+	[SerializeField] private Text[] costTexts;
+
+	[SerializeField] private Text moneyText;
+
+	void Start(){
+		UpdateUI();
+	}
 
 	void Update(){
 #if UNITY_EDITOR
@@ -16,8 +25,26 @@ public class StoreUI : UI {
 #endif
 	}
 	
-	private void UpdateUI(){
+	public void UpdateUI(){
+		// if(unlocks.rocketSizeIndex == unlocks.rocketSizeUnlocks.Length)	costTexts[0].text = "No more upgrades";
+		// else costTexts[0].text = unlocks.rocketSizePrices[unlocks.rocketSizeIndex].ToString() + " coins";
 
+		print("entrou");
+		print(unlocks.fruitNumberIndex);
+		if(unlocks.startingFuelIndex >= unlocks.startingFuelUnlocks.Length-1) costTexts[0].text = "No more upgrades";
+		else costTexts[0].text = unlocks.startingFuelPrices[unlocks.startingFuelIndex].ToString() + " coins"; 
+
+		if(unlocks.fuelConsumptionIndex >= unlocks.fuelConsumptionUnlocks.Length-1) costTexts[1].text = "No more upgrades";
+		else costTexts[1].text = unlocks.fuelConsumptionPrices[unlocks.fuelConsumptionIndex].ToString() + " coins";
+
+		if(unlocks.fruitNumberIndex >= unlocks.fruitNumberUnlocks.Length-1) costTexts[2].text = "No more upgrades";
+		else costTexts[2].text = unlocks.fruitNumberPrices[unlocks.fruitNumberIndex].ToString() + " coins";
+
+		if(unlocks.fruitQualityIndex >= unlocks.fruitQualityUnlocks.Length-1) costTexts[3].text = "No more upgrades";
+		else costTexts[3].text = unlocks.fruitQualityPrices[unlocks.fruitQualityIndex].ToString() + " coins";
+
+		
+		moneyText.text = info.money.ToString();
 	}
 
 	public void UnlockRocketSize(){

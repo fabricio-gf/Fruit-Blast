@@ -104,6 +104,11 @@ public class GameManager : MonoBehaviour {
 					astroObjects[i].GetComponent<SpriteRenderer>().sprite = fruitSpritesTier2[Random.Range(0,fruitSpritesTier2.Length)];
 					astroObjects[i].SetActive(true);
 				break;
+				default:
+					astroObjects[i].GetComponent<SpriteRenderer>().sprite = fruitSpritesTier2[Random.Range(0,fruitSpritesTier2.Length)];
+					astroObjects[i].SetActive(true);
+				break;
+
 			}
 		}
 	}

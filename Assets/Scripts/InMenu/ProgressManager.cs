@@ -44,7 +44,7 @@ public class ProgressManager : MonoBehaviour {
 
 	public void ResetProgress(bool ribbon){
 		if(ribbon){
-			PlayerPrefs.SetInt("Money", 0);
+			PlayerPrefs.SetInt("Ribbon", 0);
 		}
 		PlayerPrefs.SetInt("Money", 0);
 		PlayerPrefs.SetInt("RocketSize", 0);

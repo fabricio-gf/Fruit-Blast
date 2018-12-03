@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class MenuUI : UI {
 
-	// Use this for initialization
-	void Start () {
-		
+
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.Space)){
+			ChangeScene("Game");
+		}
+		#if UNITY_EDITOR
+			if(Input.GetKeyDown(KeyCode.R)){
+				ProgressManager.instance.ResetProgress(false);
+			}
+		#endif
+	}
+
+	public void OpenWebsite(){
+		Application.OpenURL("https://fog-icmc.itch.io/");
 	}
 
 }
